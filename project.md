@@ -53,11 +53,11 @@ Purpose of short url:
 ## API Endpoints
 
 We will need:
-- POST /api/v1/url/shorten      - url shortening
+- POST /api/v1/urls/shorten     - url shortening
 - GET /{short-url}              - url redirection
 - POST /{short-url}             - url redirection for password-protected route
 
-### POST /api/v1/url/shorten
+### POST /api/v1/urls/shorten
 
 *Description*
 
@@ -275,7 +275,7 @@ For the input(base10), we will leverage the `auto-increment` feature in Postgres
 
 ```json
 
-Url
+urls
 ------
 PK  | id            | bigint
     | shortUrl      | string, unique
