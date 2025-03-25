@@ -9,8 +9,6 @@
         "build": "npm run tsc",
         "tsc": "tsc -p tsconfig.json",
         "dev": "tsc --watch & NODE_ENV=development nodemon dist",
-        "test": "tsc && ./node_modules/.bin/mocha dist/**/*.spec.js",
-        "lint": "tslint 'src/**/*.ts' --fix",
         "clean": "rm -rf dist/ .logs/",
         "start": "node dist"
     },

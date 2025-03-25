@@ -29,7 +29,7 @@ app.post(`/api/v1/urls/shorten`, validateData(ShortenUrlRequestSchema), async (r
     }
 });
 
-app.listen(port, () => {
+app.listen(Number(port), () => {
     console.log(`Server is running on port ${port}`);
 });
 
