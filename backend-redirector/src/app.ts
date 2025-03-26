@@ -1,10 +1,11 @@
 import fastify from "fastify";
-import { initORM } from "./db.js";
+import { initORM } from "./plugins/db.js";
 import { NotFoundError, RequestContext } from "@mikro-orm/core";
 import { AuthError } from "./modules/common/utils.js";
 import { registerUrlRoutes } from "./modules/url/url.routes.js";
 import { url } from "inspector";
 import formBody from '@fastify/formbody' 
+import redisPlugin from './plugins/redis.js';
 
 export async function bootstrap(port = 3001, migrate = true) {
     const db = await initORM()
@@ -17,6 +18,11 @@ export async function bootstrap(port = 3001, migrate = true) {
 
     // support x-www-urlencoded
     await app.register(formBody)
+
+    // register redis
+    app.register(redisPlugin, {
+        url: process.env.REDIS_URL
+    })
 
     // inject entity manager
     app.addHook(`onRequest`, (req, reply, done) => {

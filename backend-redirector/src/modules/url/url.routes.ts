@@ -1,13 +1,23 @@
 import { FastifyInstance } from "fastify";
-import { initORM } from "../../db.js";
+import { initORM } from "../../plugins/db.js";
 import bcrypt from 'bcryptjs'; // esm friendly version of bcryptjs
 import { Url } from "./url.entity.js";
+import { getString, setString } from "../../plugins/redis.js";
 
 export const registerUrlRoutes = async(app: FastifyInstance) => {
     const db = await initORM();
+    const redis = app.redis
 
     app.get(`/:shortUrl`, async (request, reply) => {
         const { shortUrl } = request.params as { shortUrl: string };
+
+
+        // Fetch the long url from redis first(cache aside pattern)
+        const cachedUrl = await getString(redis, shortUrl)
+
+        if(cachedUrl) {
+            // TODO: update count, return response, handle both valid and invalid url case
+        }
 
         // Fetch the long url from the database
         const url = await db.url.findOneOrFail({shortUrl})
@@ -15,6 +25,8 @@ export const registerUrlRoutes = async(app: FastifyInstance) => {
         const validation = validateUrl(url)
         if(validation) {
             const {code, error} = validation
+
+            setString(redis, shortUrl, JSON.stringify(validation))
             return reply.code(code).send({error})
         }
       
@@ -34,10 +46,13 @@ export const registerUrlRoutes = async(app: FastifyInstance) => {
             `);
         }
 
+
+        // set cache
+        setString(redis, shortUrl, url.longUrl)
+
         // increase visitor count before redirect
         url.visitorCount += 1n
         await db.em.flush()
-        
 
         // redirect(fastify default is 302) to the long url
         return reply.redirect(url.longUrl);
@@ -61,6 +76,10 @@ export const registerUrlRoutes = async(app: FastifyInstance) => {
         if (password && url.passwordHash && !bcrypt.compareSync(password, url.passwordHash)) {
             return reply.code(401).send({error: `Invalid Credentials`})
         }
+        
+
+        // set cache
+        setString(redis, shortUrl, url.longUrl)
         
         // increase visitor count before redirect
         url.visitorCount += 1n

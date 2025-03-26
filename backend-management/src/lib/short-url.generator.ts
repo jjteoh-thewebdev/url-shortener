@@ -1,4 +1,4 @@
-export const generateShortUrl = async (id: bigint, domain = `http://localhost:3001`) => {
+export const generateShortUrl = async (id: bigint) => {
     // convert the id to base62(0-9, a-z, A-Z)
     const base62 = `0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`;
     let shortUrl = ``;
@@ -16,5 +16,5 @@ export const generateShortUrl = async (id: bigint, domain = `http://localhost:30
         id = id / 62n;
     }
 
-    return domain + `/` + shortUrl;
+    return shortUrl.padStart(7, '0');
 }

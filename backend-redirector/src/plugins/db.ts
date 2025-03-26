@@ -1,6 +1,6 @@
 import { MikroORM, Options, EntityManager, EntityRepository } from '@mikro-orm/postgresql';
-import config from './mikro-orm.config.js';
-import { Url } from './modules/url/url.entity.js';
+import config from '../mikro-orm.config.js';
+import { Url } from '../modules/url/url.entity.js';
 
 
 
@@ -13,6 +13,7 @@ export interface Services {
 
 let cache: Services;
 
+// TODO: convert to fp plugin
 export async function initORM(options?: Options): Promise<Services> {
   if (cache) {
     return cache;

@@ -7,8 +7,6 @@ import { generateShortUrl } from "../lib/short-url.generator";
 
 const saltRounds = 10;
 
-// TODO: save only the short code
-
 export async function shortenUrl(req: Request, res: Response) {
     try {
         const { long_url, custom_url, password, expiry } = req.body as ShortenUrlRequest;
@@ -50,8 +48,7 @@ export async function shortenUrl(req: Request, res: Response) {
         });
 
         if (url.shortUrl === null) {
-            const domain = process.env.DOMAIN || `http://localhost:3001`;
-            const shortUrl = await generateShortUrl(url.id, domain);
+            const shortUrl = await generateShortUrl(url.id);
             url = await prisma.url.update({
                 where: { id: url.id },
                 data: { shortUrl }
