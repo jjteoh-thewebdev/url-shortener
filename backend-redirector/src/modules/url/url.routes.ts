@@ -2,7 +2,8 @@ import { FastifyInstance } from "fastify";
 import { initORM } from "../../plugins/db.js";
 import bcrypt from 'bcryptjs'; // esm friendly version of bcryptjs
 import { Url } from "./url.entity.js";
-import { getString, setString } from "../../plugins/redis.js";
+import { readCache, writeToCache } from "../../plugins/redis.js";
+
 
 export const registerUrlRoutes = async(app: FastifyInstance) => {
     const db = await initORM();
@@ -11,28 +12,38 @@ export const registerUrlRoutes = async(app: FastifyInstance) => {
     app.get(`/:shortUrl`, async (request, reply) => {
         const { shortUrl } = request.params as { shortUrl: string };
 
-
         // Fetch the long url from redis first(cache aside pattern)
-        const cachedUrl = await getString(redis, shortUrl)
+        const cacheKey = `shorturl:${shortUrl}`
+        const cachedUrl = await readCache(redis, cacheKey)
 
         if(cachedUrl) {
-            // TODO: update count, return response, handle both valid and invalid url case
+            if (cachedUrl === `404`) {
+                return reply.code(404).send({ error: `url not found` })
+            } else if (cachedUrl === `400`) {
+                return reply.code(400).send({ error: `url expired` })
+            }
+
+            // Update with raw sql to boost performance, reduce round trip to the database
+            await db.em.execute(`UPDATE url SET visitorCount = visitorCount + 1 WHERE shortUrl = ${shortUrl}`)
+            return reply.redirect(cachedUrl)
         }
 
         // Fetch the long url from the database
-        const url = await db.url.findOneOrFail({shortUrl})
+        const url = await db.url.findOneOrFail({ shortUrl })
         
         const validation = validateUrl(url)
         if(validation) {
             const {code, error} = validation
 
-            setString(redis, shortUrl, JSON.stringify(validation))
+            // set the cache for 60 seconds(shorter ttl for invalid url aka negative cache)
+            writeToCache(redis, cacheKey, code.toString(), 60)
             return reply.code(code).send({error})
         }
       
 
         // if the url is password protected, prompt password
         if(url.passwordHash) {
+            // for simplicity, we dont count password prompt as a visit
             return reply.type('text/html').send(`
                 <html>
                     <body>
@@ -46,9 +57,8 @@ export const registerUrlRoutes = async(app: FastifyInstance) => {
             `);
         }
 
-
         // set cache
-        setString(redis, shortUrl, url.longUrl)
+        writeToCache(redis, cacheKey, url.longUrl, 60 * 60) // 1 hour
 
         // increase visitor count before redirect
         url.visitorCount += 1n
@@ -60,6 +70,10 @@ export const registerUrlRoutes = async(app: FastifyInstance) => {
     })
     
     
+
+    // there are several ways to handle caching for a password protected url
+    // e.g. cookies, session, etc.
+    // for simplicity, we opt not to cache password protected url
     app.post(`/:shortUrl`, async (request, reply) => {
         const { shortUrl } = request.params as { shortUrl: string };
         const { password } = request.body as { password: string };
@@ -76,11 +90,7 @@ export const registerUrlRoutes = async(app: FastifyInstance) => {
         if (password && url.passwordHash && !bcrypt.compareSync(password, url.passwordHash)) {
             return reply.code(401).send({error: `Invalid Credentials`})
         }
-        
 
-        // set cache
-        setString(redis, shortUrl, url.longUrl)
-        
         // increase visitor count before redirect
         url.visitorCount += 1n
         await db.em.flush()
@@ -109,3 +119,4 @@ const validateUrl = (url?: Url) => {
 
     return null
 }
+

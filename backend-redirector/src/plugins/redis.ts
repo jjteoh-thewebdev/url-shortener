@@ -20,11 +20,14 @@ const redisPlugin: FastifyPluginAsync<{ url?: string }> = async (fastify, opts) 
 
 export default fp(redisPlugin);
 
-export const setString = async(redis: Redis.default, key: string, value: string): Promise<void> => {
+export const writeToCache = async (redis: Redis.default, key: string, value: string, ttl?: number): Promise<void> => {
+  if (ttl) {
+    await redis.set(key, value, 'EX', ttl)
+  } else {
     await redis.set(key, value)
+  }
 }
 
-export const getString = async(redis: Redis.default, key: string): Promise<string | null> => {
-    // TODO: handle TTL
+export const readCache = async (redis: Redis.default, key: string): Promise<string | null> => {
     return await redis.get(key)
 }

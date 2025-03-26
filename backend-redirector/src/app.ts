@@ -7,12 +7,13 @@ import { url } from "inspector";
 import formBody from '@fastify/formbody' 
 import redisPlugin from './plugins/redis.js';
 
-export async function bootstrap(port = 3001, migrate = true) {
+export async function bootstrap(port = 3001) {
     const db = await initORM()
 
-    if(migrate) {
-        await db.orm.migrator.up()
-    }
+    // we let prisma handle migrations in backend-management service
+    // if(migrate) {
+    //     await db.orm.migrator.up()
+    // }
 
     const app = fastify()
 
