@@ -1,24 +1,30 @@
 {
   "name": "backend-redirector",
   "version": "1.0.0",
-  "main": "dist",
+  "main": "dist/server.js",
   "author": "JJ Teoh <thewebdev.jjteoh@gmail.com>",
   "license": "MIT",
   "description": "A simple backend redirector. Built with Fastify and Prisma.",
+  "type": "module",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "dev": "tsc --watch & NODE_ENV=development nodemon dist",
-    "start": "node dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "start": "node --no-warnings=ExperimentalWarning --loader ts-node/esm src/server.ts",
+    "start:prod": "NODE_ENV=production node dist/server.js",
+    "test": "vitest run"
   },
   "dependencies": {
+    "@mikro-orm/core": "^6.4.11",
+    "@mikro-orm/postgresql": "^6.4.11",
+    "bcryptjs": "^3.0.2",
     "dotenv": "^16.4.7",
     "fastify": "^5.2.1"
   },
   "devDependencies": {
+    "@mikro-orm/cli": "^6.4.11",
+    "@mikro-orm/reflection": "^6.4.11",
     "@types/node": "^22.13.13",
     "nodemon": "^3.1.9",
-    "prisma": "^6.5.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
   }
 }
