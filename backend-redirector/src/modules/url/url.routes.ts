@@ -34,6 +34,11 @@ export const registerUrlRoutes = async(app: FastifyInstance) => {
             `);
         }
 
+        // increase visitor count before redirect
+        url.visitorCount += 1n
+        await db.em.flush()
+        
+
         // redirect(fastify default is 302) to the long url
         return reply.redirect(url.longUrl);
 
@@ -51,13 +56,16 @@ export const registerUrlRoutes = async(app: FastifyInstance) => {
             const {code, error} = validation
             return reply.code(code).send({error})
         }
-      
 
         // check if the password is correct
         if (password && url.passwordHash && !bcrypt.compareSync(password, url.passwordHash)) {
             return reply.code(401).send({error: `Invalid Credentials`})
         }
-    
+        
+        // increase visitor count before redirect
+        url.visitorCount += 1n
+        await db.em.flush()
+
         // redirect(fastify default is 302) to the long url
         return reply.redirect(url.longUrl);
     })
