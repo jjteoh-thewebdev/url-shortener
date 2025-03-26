@@ -3,8 +3,6 @@ import { initORM } from "../../db.js";
 import bcrypt from 'bcryptjs'; // esm friendly version of bcryptjs
 import { Url } from "./url.entity.js";
 
-const saltRounds = 10
-
 export const registerUrlRoutes = async(app: FastifyInstance) => {
     const db = await initORM();
 
@@ -43,7 +41,8 @@ export const registerUrlRoutes = async(app: FastifyInstance) => {
     
     
     app.post(`/:shortUrl`, async (request, reply) => {
-        const { shortUrl, password } = request.params as { shortUrl: string, password: string };
+        const { shortUrl } = request.params as { shortUrl: string };
+        const { password } = request.body as { password: string };
 
         const url = await db.url.findOneOrFail({shortUrl})
 

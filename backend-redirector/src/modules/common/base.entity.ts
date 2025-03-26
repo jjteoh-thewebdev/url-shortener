@@ -7,6 +7,6 @@ export abstract class BaseEntity<Optional = never> {
   @PrimaryKey()
   id!: bigint
 
-  @Property({ defaultRaw: 'now()' })
+  @Property({ defaultRaw: 'now()', name: "createdAt" })
   createdAt = new Date()
 }

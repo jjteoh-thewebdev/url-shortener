@@ -2,8 +2,9 @@ import fastify from "fastify";
 import { initORM } from "./db.js";
 import { NotFoundError, RequestContext } from "@mikro-orm/core";
 import { AuthError } from "./modules/common/utils.js";
-import { registerUrlRoutes } from "./modules/url/user.routes.js";
+import { registerUrlRoutes } from "./modules/url/url.routes.js";
 import { url } from "inspector";
+import formBody from '@fastify/formbody' 
 
 export async function bootstrap(port = 3001, migrate = true) {
     const db = await initORM()
@@ -13,6 +14,9 @@ export async function bootstrap(port = 3001, migrate = true) {
     }
 
     const app = fastify()
+
+    // support x-www-urlencoded
+    await app.register(formBody)
 
     // inject entity manager
     app.addHook(`onRequest`, (req, reply, done) => {

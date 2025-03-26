@@ -8,11 +8,13 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
+    "dev": "tsc --watch & NODE_ENV=development nodemon dist/server.js",
     "start": "node --no-warnings=ExperimentalWarning --loader ts-node/esm src/server.ts",
     "start:prod": "NODE_ENV=production node dist/server.js",
     "test": "vitest run"
   },
   "dependencies": {
+    "@fastify/formbody": "^8.0.2",
     "@mikro-orm/core": "^6.4.11",
     "@mikro-orm/postgresql": "^6.4.11",
     "bcryptjs": "^3.0.2",
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "@mikro-orm/cli": "^6.4.11",
+    "@mikro-orm/migrations": "^6.4.11",
     "@mikro-orm/reflection": "^6.4.11",
     "@types/node": "^22.13.13",
     "nodemon": "^3.1.9",

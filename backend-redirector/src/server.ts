@@ -6,6 +6,8 @@ import { bootstrap } from './app.js';
 try {
     dotenv.config();
 
+    console.log("database", process.env.DATABASE_URL)
+
     const port = process.env.PORT || 3002;
 
     const { url } = await bootstrap(Number(port))

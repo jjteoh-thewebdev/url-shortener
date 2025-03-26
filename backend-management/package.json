@@ -10,7 +10,10 @@
         "tsc": "tsc -p tsconfig.json",
         "dev": "tsc --watch & NODE_ENV=development nodemon dist",
         "clean": "rm -rf dist/ .logs/",
-        "start": "node dist"
+        "start": "node dist",
+        "migrate:dev": "npx prisma migrate dev",
+        "migrate:prod": "npx prisma migrate deploy"
+
     },
     "config": {
         "commitizen": {

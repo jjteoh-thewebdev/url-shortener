@@ -3,18 +3,18 @@ import { BaseEntity } from "../common/base.entity.js";
 
 @Entity({ tableName: `urls` })
 export class Url extends BaseEntity {
-    @Property({ nullable: true, unique: true })
+    @Property({ nullable: true, unique: true, name: "shortUrl" })
     shortUrl?: string;
 
-    @Property()
+    @Property({ name: "longUrl"})
     longUrl!: string;
 
-    @Property({ hidden: true, nullable: true })
+    @Property({ hidden: true, nullable: true, name: "passwordHash" })
     passwordHash?: string;
 
-    @Property({ default: 0 })
+    @Property({ default: 0, name: "visitorCount" })
     visitorCount!: bigint;
 
-    @Property({ nullable: true })
+    @Property({ nullable: true, name: "expiredAt" })
     expiredAt?: Date;
 }

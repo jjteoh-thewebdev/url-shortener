@@ -1,14 +1,29 @@
+# WARNING: This is not a production-ready docker compose
 
 services:
+
+  # node 20 for development environment if you are using devcontainer/codespace
+  app:
+    # image: mcr.microsoft.com/devcontainers/javascript-node:0-20
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    command: sleep infinity # prevents exit, lets you develop
+    depends_on:
+      - postgres
+
   postgres:
     image: postgres:16-alpine
     container_name: url-shortener-db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres123
+      POSTGRES_USER: postgres # for development only
+      POSTGRES_PASSWORD: postgres123 # for development only
       POSTGRES_DB: url_shortener
     ports:
-      - "5430:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:

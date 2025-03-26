@@ -2,6 +2,9 @@ import { MikroORM, Options, EntityManager, EntityRepository } from '@mikro-orm/p
 import config from './mikro-orm.config.js';
 import { Url } from './modules/url/url.entity.js';
 
+
+
+
 export interface Services {
   orm: MikroORM;
   em: EntityManager;
@@ -14,6 +17,8 @@ export async function initORM(options?: Options): Promise<Services> {
   if (cache) {
     return cache;
   }
+
+  console.log(config)
 
   // allow overriding config options for testing
   const orm = await MikroORM.init({

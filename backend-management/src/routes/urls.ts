@@ -7,6 +7,8 @@ import { generateShortUrl } from "../lib/short-url.generator";
 
 const saltRounds = 10;
 
+// TODO: save only the short code
+
 export async function shortenUrl(req: Request, res: Response) {
     try {
         const { long_url, custom_url, password, expiry } = req.body as ShortenUrlRequest;
