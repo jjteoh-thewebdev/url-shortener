@@ -1,5 +1,5 @@
 import fp from 'fastify-plugin';
-import Redis from 'ioredis';
+import * as Redis from 'ioredis';
 import { FastifyPluginAsync } from 'fastify';
 
 declare module 'fastify' {
@@ -9,7 +9,7 @@ declare module 'fastify' {
 }
 
 const redisPlugin: FastifyPluginAsync<{ url?: string }> = async (fastify, opts) => {
-  const redis = new Redis.default(opts.url || 'redis://localhost:6379');
+  const redis = new Redis.Redis(opts.url || 'redis://localhost:6379');
 
   fastify.decorate('redis', redis);
 

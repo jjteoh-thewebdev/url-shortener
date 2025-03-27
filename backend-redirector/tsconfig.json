@@ -6,24 +6,41 @@
     "lib": [
       "es2023"
     ],
-    "module": "nodenext",
+    "module": "NodeNext",
+    // "isolatedModules": true, // TODO: solve jest lack of support for esm modules
     "target": "es2022",
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "moduleResolution": "node16",
+    // "moduleResolution": "NodeNext",
     "declaration": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "useDefineForClassFields": false, // this will enable support for mikroORM's decorator
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "types": [
+      "node",
+      "jest",
+      "supertest"
+    ]
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "dist",
+    "temp"
   ],
   "include": [
-    "./src/**/*.ts"
+    "./src/**/*"
   ],
   "ts-node": {
     "esm": true,
