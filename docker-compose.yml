@@ -1,15 +1,65 @@
 # WARNING: This is not a production-ready docker compose
+# Do not use weak password for production
 
 services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: url-shortener-frontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./frontend/.docker.env
+    depends_on:
+      - backend-management
+      - backend-redirector
+    networks:
+      - url-shortener-network
+
+  backend-management:
+    build:
+      context: ./backend-management
+      dockerfile: Dockerfile
+    container_name: url-shortener-management
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./backend-management/.docker.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - url-shortener-network
+
+  backend-redirector:
+    build:
+      context: ./backend-redirector
+      dockerfile: Dockerfile
+    container_name: url-shortener-redirector
+    ports:
+      - "3002:3002"
+    env_file:
+      - ./backend-redirector/.docker.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - url-shortener-network
+
   postgres:
     image: postgres:16-alpine
     container_name: url-shortener-db
     environment:
-      POSTGRES_USER: postgres # for development only
-      POSTGRES_PASSWORD: postgres123 # for development only
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
       POSTGRES_DB: url_shortener
     ports:
-      - "5430:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -17,11 +67,13 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - url-shortener-network
 
   redis:
     image: redis:7-alpine
     container_name: url-shortener-redis
-    command: redis-server --requirepass redis123 # for development only
+    command: redis-server --requirepass redis123
     ports:
       - "6379:6379"
     volumes:
@@ -31,7 +83,13 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - url-shortener-network
+
+networks:
+  url-shortener-network:
+    driver: bridge
 
 volumes:
-  postgres_data: 
+  postgres_data:
   redis_data: 

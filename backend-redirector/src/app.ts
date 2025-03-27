@@ -7,7 +7,7 @@ import { url } from "inspector";
 import formBody from '@fastify/formbody' 
 import redisPlugin from './plugins/redis.js';
 
-export async function bootstrap(port = 3001) {
+export async function bootstrap(port = 3001, host = '0.0.0.0') {
     const db = await initORM()
 
     // we let prisma handle migrations in backend-management service
@@ -15,7 +15,9 @@ export async function bootstrap(port = 3001) {
     //     await db.orm.migrator.up()
     // }
 
-    const app = fastify()
+    const app = fastify({
+        logger: true
+    })
 
     // support x-www-urlencoded
     await app.register(formBody)
@@ -57,7 +59,7 @@ export async function bootstrap(port = 3001) {
     })
 
 
-    const ur = await app.listen({ port: Number(port) }, (err, address) => {
+    const url = await app.listen({ port: Number(port), host }, (err, address) => {
         if (err) {
             console.error(err)
             process.exit(1)
