@@ -5,8 +5,11 @@ import helmet from 'helmet';
 import { validateData } from './middlewares/request-validation';
 import { shortenUrl } from './routes/urls';
 import { ShortenUrlRequestSchema } from './dtos/shorten-url.request';
+import { initTracing } from './lib/tracing';
 
 dotenv.config();
+
+initTracing();
 
 const app = express();
 const port = process.env.PORT || 3001;

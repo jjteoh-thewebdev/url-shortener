@@ -1,10 +1,13 @@
 import dotenv from 'dotenv';
 import { bootstrap } from './app.js';
+import { initTracing } from './lib/tracing.js';
 
 
 
 try {
     dotenv.config();
+
+    initTracing();
 
     const port = process.env.PORT || 3002;
     const host = process.env.HOST || '0.0.0.0';

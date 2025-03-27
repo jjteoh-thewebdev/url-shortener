@@ -122,6 +122,9 @@ export function UrlShorternerForm({onSuccess}: UrlShorternerFormProps) {
                 });
                 setValidationErrors(errors);
             } else {
+                if (e.message === `Failed to fetch`) {
+                    e.message = "Failed to connect to the server, please try again later"
+                } 
                 // Handle other errors
                 setError(e.message || "Something went wrong, please try again later")
             }
