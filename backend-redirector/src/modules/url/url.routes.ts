@@ -24,7 +24,7 @@ export const registerUrlRoutes = async(app: FastifyInstance) => {
             }
 
             // Update with raw sql to boost performance, reduce round trip to the database
-            await db.em.execute(`UPDATE url SET visitorCount = visitorCount + 1 WHERE shortUrl = ${shortUrl}`)
+            await db.em.execute(`UPDATE urls SET "visitorCount" = "visitorCount" + 1 WHERE "shortUrl" = '${shortUrl}'`)
             return reply.redirect(cachedUrl)
         }
 
@@ -58,7 +58,8 @@ export const registerUrlRoutes = async(app: FastifyInstance) => {
         }
 
         // set cache
-        writeToCache(redis, cacheKey, url.longUrl, 60 * 60) // 1 hour
+        const cacheTtl = url.expiredAt ? Math.floor((url.expiredAt.getTime() - Date.now()) / 1000) : 60 * 60 // 1 hour
+        writeToCache(redis, cacheKey, url.longUrl, cacheTtl)
 
         // increase visitor count before redirect
         url.visitorCount += 1n

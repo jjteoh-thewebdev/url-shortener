@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: postgres123 # for development only
       POSTGRES_DB: url_shortener
     ports:
-      - "5432:5432"
+      - "5430:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
