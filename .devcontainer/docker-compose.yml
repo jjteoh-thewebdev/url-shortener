@@ -1,6 +1,21 @@
 # WARNING: This is not a production-ready docker compose
 
 services:
+
+  # node 20 for development environment if you are using devcontainer/codespace
+  app:
+    # image: mcr.microsoft.com/devcontainers/javascript-node:0-20
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    command: sleep infinity # prevents exit, lets you develop
+    depends_on:
+      - postgres
+      - redis
+
   postgres:
     image: postgres:16-alpine
     container_name: url-shortener-db
@@ -9,7 +24,7 @@ services:
       POSTGRES_PASSWORD: postgres123 # for development only
       POSTGRES_DB: url_shortener
     ports:
-      - "5430:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -21,7 +36,7 @@ services:
   redis:
     image: redis:7-alpine
     container_name: url-shortener-redis
-    command: redis-server --requirepass redis123 # for development only
+    command: redis-server --requirepass redis123
     ports:
       - "6379:6379"
     volumes:
@@ -33,5 +48,5 @@ services:
       retries: 5
 
 volumes:
-  postgres_data: 
+  postgres_data:
   redis_data: 

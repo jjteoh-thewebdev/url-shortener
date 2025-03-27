@@ -1,7 +1,7 @@
 import { ShortUrlData } from "@/app/page"
 import { useState } from "react"
 import { Button } from "./ui/button"
-import { ArrowLeft, Check, Copy, Share2 } from "lucide-react"
+import { ArrowLeft, Check, Copy, ExternalLink, Share2 } from "lucide-react"
 import { Badge } from "./ui/badge"
 import { format } from "date-fns"
 import { Input } from "./ui/input"
@@ -83,9 +83,13 @@ type UrlShortenerResultProps = {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-                <Button onClick={copyToClipboard} className="w-full" variant="outline">
-                    <Copy className="mr-2 h-4 w-4" />
-                    Copy Link
+                <Button
+                    onClick={() => window.open(data.shortUrl, '_blank', 'noopener,noreferrer')}
+                    className="w-full"
+                    variant="outline"
+                >
+                    <ExternalLink className="mr-2 h-4 w-4" />
+                    Open Link
                 </Button>
                 <Button onClick={shareUrl} className="w-full">
                     <Share2 className="mr-2 h-4 w-4" />

@@ -9,16 +9,24 @@
     "module": "nodenext",
     "target": "es2022",
     "outDir": "./dist",
+    "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "moduleResolution": "node16",
-    "noImplicitAny": true
+    "declaration": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false, // this will enable support for mikroORM's decorator
   },
   "exclude": [
     "node_modules"
   ],
   "include": [
     "./src/**/*.ts"
-  ]
+  ],
+  "ts-node": {
+    "esm": true,
+    "transpileOnly": true
+  }
 }

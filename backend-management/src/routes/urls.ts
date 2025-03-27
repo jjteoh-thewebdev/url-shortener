@@ -48,8 +48,7 @@ export async function shortenUrl(req: Request, res: Response) {
         });
 
         if (url.shortUrl === null) {
-            const domain = process.env.DOMAIN || `http://localhost:3001`;
-            const shortUrl = await generateShortUrl(url.id, domain);
+            const shortUrl = await generateShortUrl(url.id);
             url = await prisma.url.update({
                 where: { id: url.id },
                 data: { shortUrl }
@@ -59,7 +58,13 @@ export async function shortenUrl(req: Request, res: Response) {
         return res.status(StatusCodes.OK).json({
             error: null,
             data: {
-                short_url: url.shortUrl
+                id: url.id.toString(),
+                short_url: url.shortUrl,
+                long_url: url.longUrl,
+                visitor_count: url.visitorCount.toString(),
+                has_password: url.passwordHash !== null,
+                expired_at: url.expiredAt,
+                created_at: url.createdAt
             }
         });
 
