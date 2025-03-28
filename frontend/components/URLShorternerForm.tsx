@@ -178,6 +178,7 @@ export function UrlShorternerForm({onSuccess}: UrlShorternerFormProps) {
                             <div className="flex items-center">
                                 <span className="text-sm text-muted-foreground mr-2">{process.env.NEXT_PUBLIC_REDIRECT_URL ?? "https://localhost:3000"}/</span>
                                 <Input
+                                    data-testid="custom-short-url"
                                     id="customShortUrl"
                                     placeholder={"custom-name"}
                                     value={customShortUrl}
@@ -263,6 +264,7 @@ export function UrlShorternerForm({onSuccess}: UrlShorternerFormProps) {
                                     </TooltipProvider>
                                 </div>
                                 <Switch
+                                    data-testid="password-switch"
                                     id="password-protection"
                                     className="cursor-pointer"
                                     checked={hasPassword}
@@ -275,6 +277,7 @@ export function UrlShorternerForm({onSuccess}: UrlShorternerFormProps) {
                                     <Label htmlFor="password">Password</Label>
                                     <div className="relative">
                                         <Input
+                                            data-testid="password-input"
                                             id="password"
                                             type="password"
                                             placeholder="Enter password"

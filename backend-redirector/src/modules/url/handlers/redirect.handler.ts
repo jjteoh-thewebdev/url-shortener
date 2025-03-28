@@ -44,8 +44,8 @@ export const redirectHandler = async (request: FastifyRequest, reply: FastifyRep
                     <body>
                         <form method="POST" action="/${shortUrl}">
                             <label for="password">Enter Password:</label>
-                            <input type="password" id="password" name="password" required />
-                            <button type="submit">Submit</button>
+                            <input data-testid="password-input" type="password" id="password" name="password" required />
+                            <button data-testid="password-submit-button" type="submit">Submit</button>
                         </form>
                     </body>
                 </html>

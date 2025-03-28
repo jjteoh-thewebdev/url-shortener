@@ -74,7 +74,7 @@ type UrlShortenerResultProps = {
                 <div className="space-y-2">
                     <div className="text-sm font-medium text-muted-foreground">Your short URL</div>
                     <div className="flex items-center gap-2">
-                        <Input value={data.shortUrl ?? "http://localhost:3000"} readOnly className="font-medium bg-background" />
+                        <Input id="shortened-url" value={data.shortUrl ?? "http://localhost:3000"} readOnly className="font-medium bg-background" />
                         <Button size="icon" variant="outline" onClick={copyToClipboard} className="shrink-0">
                             {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                         </Button>
@@ -84,6 +84,7 @@ type UrlShortenerResultProps = {
 
             <div className="grid grid-cols-2 gap-4">
                 <Button
+                    data-testid="open-link-button"
                     onClick={() => window.open(data.shortUrl, '_blank', 'noopener,noreferrer')}
                     className="w-full"
                     variant="outline"
