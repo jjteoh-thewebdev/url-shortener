@@ -79,16 +79,21 @@ success case
 ```json
 // HTTP 200 OK
 {
-    "error": null, 
-    "data": { 
-        "short_url": string
+    "error": null,
+    "data": {
+        "id": "66",
+        "short_url": "0000014",
+        "long_url": "https://very-long-url",
+        "visitor_count": "0",
+        "has_password": false,
+        "expired_at": null,
+        "created_at": "2025-03-28T09:29:24.721Z"
     }
 }
 ```
 
 failed case
 ```json
-// HTTP 400 Bad Request or 500 Internal Server Error 
 {
     "error": string,
     "data": null
@@ -119,7 +124,7 @@ not found case
 ```json
 // HTTP 404 NOT FOUND
 {
-    "error": "requested url not found.",
+    "error": "url not found.",
     "data": null
 }
 ```
@@ -133,7 +138,7 @@ expired short url
 ```json
 // HTTP 400 BAD REQUEST
 {
-    "error": "requested url already expired.",
+    "error": "url expired.",
     "data": null
 }
 ```
@@ -164,7 +169,7 @@ not found case
 ```json
 // HTTP 404 NOT FOUND
 {
-    "error": "requested url not found.",
+    "error": "url not found.",
     "data": null
 }
 ```
@@ -173,7 +178,7 @@ invalid password
 ```json
 // HTTP 401 Unauthorized
 {
-    "error": "Invalid credentials",
+    "error": "Invalid Credentials",
     "data": null
 }
 ```
@@ -182,7 +187,7 @@ expired short url
 ```json
 // HTTP 400 BAD REQUEST
 {
-    "error": "requested url already expired.",
+    "error": "url expired.",
     "data": null
 }
 ```
@@ -299,7 +304,8 @@ Keynote:
 
 ## Cache Strategy
 - Redis string
-    - key: short-url, value: json string of url object
-    - Least Recently Used (LRU)
-
-## Load Balancing
+    - key: short-url, value: long url/error code in case of fail
+    - Cache-Aside: 
+        - for url not exist or expired(negative cache): we set ttl to 60 seconds 
+        - for normal url: we set ttl to 1hr or until the end of the custom expiry date, whichever shorter.
+        - for password protected url, we choose not to cache.

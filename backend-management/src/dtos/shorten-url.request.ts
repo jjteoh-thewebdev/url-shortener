@@ -9,7 +9,12 @@ export const ShortenUrlRequestSchema = z.object({
         })
     ).optional(),
     password: z.string().optional(),
-    custom_url: z.string().optional(),
+    custom_url: z.string()
+        // blacklist 400 and 404 as we use them to cache miss
+        .refine(val => val !== '404' && val !== '400', {
+            message: "url already exists"
+        })
+        .optional(),
 });
 
 export type ShortenUrlRequest = z.infer<typeof ShortenUrlRequestSchema>;
