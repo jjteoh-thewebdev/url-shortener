@@ -1,7 +1,7 @@
 import type { Config } from 'jest';
 
 const config: Config = {
-    preset: 'ts-jest',
+    // preset: 'ts-jest',
     testEnvironment: 'node',
     extensionsToTreatAsEsm: ['.ts'],
     moduleNameMapper: {
@@ -20,7 +20,8 @@ const config: Config = {
     //     '!src/__tests__/**/*.ts'
     // ],
     transformIgnorePatterns: [
-        'node_modules/(?!@mikro-orm/core|@mikro-orm/postgresql|@mikro-orm/reflection)',
+        // 'node_modules/(?!@mikro-orm/core|@mikro-orm/postgresql|@mikro-orm/reflection)',
+        'node_modules'
     ],
     testEnvironmentOptions: {
         url: 'http://localhost:3002',

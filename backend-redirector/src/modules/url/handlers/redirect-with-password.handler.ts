@@ -12,8 +12,6 @@ export const redirectWithPasswordHandler = async (request: FastifyRequest, reply
 
     const url = await db.url.findOne({ shortUrl })
 
-
-
     const validation = validateUrl(url)
     if (validation) {
         const { code, error } = validation

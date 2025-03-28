@@ -14,9 +14,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:e2e": "node --experimental-vm-modules --no-warnings=ExperimentalWarning node_modules/dotenv-cli/cli.js -e .env.e2e node_modules/jest/bin/jest.js -c jest.e2e.config.ts",
-    "test:e2e:watch": "dotenv -e .env.e2e node --experimental-vm-modules --no-warnings=ExperimentalWarning node_modules/jest/bin/jest.js -c jest.e2e.config.ts --watch",
-    "test:e2e:coverage": "dotenv -e .env.e2e node --experimental-vm-modules --no-warnings=ExperimentalWarning node_modules/jest/bin/jest.js -c jest.e2e.config.ts --coverage"
+    "test:e2e": "dotenv -e .env.e2e -- node --experimental-vm-modules --no-warnings=ExperimentalWarning node_modules/jest/bin/jest.js -c jest.e2e.config.ts"
   },
   "dependencies": {
     "@fastify/formbody": "^8.0.2",

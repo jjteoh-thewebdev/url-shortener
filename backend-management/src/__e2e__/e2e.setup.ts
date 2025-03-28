@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 // we assume that the test database is already created and migrated up to date
 // and the DATABASE_URL is set
 
-dotenv.config({ path: '.env.e2e' });
+dotenv.config({ path: `${process.cwd()}/.env.e2e`, override: true });
 
 if (process.env.NODE_ENV !== 'e2e') {
     throw new Error('NODE_ENV is not set to e2e');

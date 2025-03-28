@@ -17,15 +17,17 @@ import dotenv from 'dotenv';
 import { initORM } from '../plugins/db.js';
 import { Url } from '../modules/url/url.entity.js';
 import bcrypt from 'bcryptjs';
+import { MikroORM } from '@mikro-orm/core';
+import config from '../mikro-orm.config.js';
 
 // Load environment variables from .env.e2e
-dotenv.config({ path: '.env.e2e' });
+dotenv.config({ path: `${process.cwd()}/.env.e2e`, override: true });
 
 if (process.env.NODE_ENV !== 'e2e') {
     throw new Error('NODE_ENV is not set to e2e');
 }
 
-let db: any;
+let db: MikroORM;
 
 // Test data
 const testUrls = [
@@ -61,21 +63,29 @@ const testUrls = [
 
 beforeAll(async () => {
     // Initialize database connection
-    db = await initORM();
+    // db = await initORM();
+    db = await MikroORM.init({
+        ...config,
+        clientUrl: process.env.DATABASE_URL
+    })
+
+    const fork = db.em.fork()
 
     // Seed test data
     for (const urlData of testUrls) {
-        const url = db.em.create(Url, urlData);
-        await db.em.persistAndFlush(url);
+        const url = fork.create(Url, urlData);
+        await fork.persistAndFlush(url);
     }
 });
 
 afterAll(async () => {
+    const fork = db.em.fork()
+
     // Clean up test data
-    await db.em.nativeDelete(Url, {});
+    await fork.nativeDelete(Url, {});
 
     // Close database connection
-    await db.orm.close();
+    await db.close();
 });
 
 
