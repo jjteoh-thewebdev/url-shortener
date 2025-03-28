@@ -104,7 +104,7 @@ A modern Next.js application that provides the user interface for the URL shorte
 ![URL Shortening Interface](media/landing-page-1.png)
 
 ### Validation with ZOD
-![Validation with ZOD](media/landing-page-1.png)
+![Validation with ZOD](media/landing-page-2.png)
 
 ### Result Page
 ![Result Page](media/result-page-1.png)
