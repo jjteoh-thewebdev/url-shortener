@@ -27,7 +27,7 @@ A high-performance URL redirection service built with Fastify, TypeScript, Mikro
 
 ### Prerequisites
 
-- Node.js 18.x or later
+- Node.js 20.x or later
 - Redis
 - PostgreSQL(migration done with Prisma - refer backend-management/)
 - npm

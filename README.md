@@ -116,11 +116,11 @@ A modern Next.js application that provides the user interface for the URL shorte
 ## Development
 
 ### Prerequisites
-- Node.js 18.x or later
+- Node.js 20.x or later
 - PostgreSQL
 - Redis
 - Docker and Docker Compose
-- npm or yarn
+- npm
 
 ### Local Development
 

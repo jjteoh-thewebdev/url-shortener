@@ -26,9 +26,9 @@ A robust management service for the URL shortener application built with Fastify
 
 ### Prerequisites
 
-- Node.js 18.x or later
+- Node.js 20.x or later
 - PostgreSQL
-- npm or yarn
+- npm
 
 ### Installation
 

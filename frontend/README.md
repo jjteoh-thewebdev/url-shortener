@@ -24,8 +24,8 @@ A modern, responsive frontend for the URL shortener application built with Next.
 
 ### Prerequisites
 
-- Node.js 18.x or later
-- npm or yarn
+- Node.js 20.x or later
+- npm
 
 ### Installation
 
